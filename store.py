@@ -17,7 +17,7 @@ def process(msg: mailbox.MaildirMessage):
     contents = ""
     for part in msg.walk():
         if part.get_content_type() == "text/plain" or part.get_content_type() == "text/html":
-            contents += part.get_payload(decode = True)
+            contents += part.get_payload(decode = True).decode('utf-8')
     print(sender)
     print(date)
     print(subject)
