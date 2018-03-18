@@ -11,8 +11,19 @@ def is_spam(msg: mailbox.MaildirMessage) -> bool:
 # Process an individual message
 # extract subject, author, just text (no mime attachments/html)
 def process(msg: mailbox.MaildirMessage):
-    for k, v in msg.items():
-        print("Key: ", k, "Value: ", v)
+    sender: str = msg["From"]
+    date: str = msg["Date"]
+    subject: str = msg["Subject"]
+    contents: str = ""
+    for part in msg.walk():
+        if part.get_content_type() == "text/plain" or part.get_content_type() == "text/html":
+            contents += part.get_payload(decode = True)
+    print(sender)
+    print(date)
+    print(subject)
+    print(contents)
+    #for k, v in msg.items():
+    #    print("Key: ", k, "Value: ", v)
 
 
 # Find all the text from each message and store it
@@ -20,7 +31,7 @@ def process(msg: mailbox.MaildirMessage):
 # potentially check if went through spam filter first
 # and also eliminate messages by non-registered users
 # Delete messages when done with them
-def store_and_delete(mailing_list):
+def store_and_delete(mailing_list: str):
     md = mailbox.Maildir('/home/ubuntu/' + mailing_list + '/Maildir')
     for msg in md:
         # only look at new messages
