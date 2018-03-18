@@ -11,10 +11,10 @@ def is_spam(msg: mailbox.MaildirMessage) -> bool:
 # Process an individual message
 # extract subject, author, just text (no mime attachments/html)
 def process(msg: mailbox.MaildirMessage):
-    sender: str = msg["From"]
-    date: str = msg["Date"]
-    subject: str = msg["Subject"]
-    contents: str = ""
+    sender = msg["From"]
+    date = msg["Date"]
+    subject = msg["Subject"]
+    contents = ""
     for part in msg.walk():
         if part.get_content_type() == "text/plain" or part.get_content_type() == "text/html":
             contents += part.get_payload(decode = True)
