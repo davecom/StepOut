@@ -12,7 +12,7 @@ def is_spam(msg: mailbox.MaildirMessage) -> bool:
 # extract subject, author, just text (no mime attachments/html)
 def process(msg: mailbox.MaildirMessage):
     for k, v in msg.items():
-        print(k, v)
+        print("Key: ", k, "Value: ", v)
 
 
 # Find all the text from each message and store it
