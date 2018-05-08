@@ -1,6 +1,7 @@
 import mailbox
-
-mailing_lists = ["kewgardens"]
+import settings
+from item import Item
+from database_manager import DatabaseManager
 
 
 # Detect if a message is spam or not
@@ -22,6 +23,7 @@ def process(msg: mailbox.MaildirMessage):
     print(date)
     print(subject)
     print(contents)
+    return Item(sender, date, subject, contents)
     #for k, v in msg.items():
     #    print("Key: ", k, "Value: ", v)
 
@@ -32,14 +34,17 @@ def process(msg: mailbox.MaildirMessage):
 # and also eliminate messages by non-registered users
 # Delete messages when done with them
 def store_and_delete(mailing_list: str):
-    md = mailbox.Maildir('/home/ubuntu/' + mailing_list + '/Maildir')
+    db = DatabaseManager()
+    md = mailbox.Maildir(settings.STEPOUT_BASE_PATH + mailing_list + '/Maildir')
     for msg in md:
         # only look at new messages
         if msg.get_subdir() == "new":
-            process(msg)
+            item = process(msg)
+            db.store_item(item)
+
     return
 
 
 if __name__ == "__main__":
-    for mailing_list in mailing_lists:
+    for mailing_list in settings.MAILING_LISTS:
         store_and_delete(mailing_list)
